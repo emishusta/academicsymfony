@@ -1,0 +1,3 @@
+_user:
+    resource: "@OroUserBundle/Controller/UserController.php"
+    type:     annotation

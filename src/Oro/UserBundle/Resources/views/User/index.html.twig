@@ -1,0 +1,6 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <h1>{% trans %}Users{% endtrans %}</h1>
+    <a href="{{ path('_user_new') }}">{% trans %}Add New User{% endtrans %}</a>
+{% endblock %}
