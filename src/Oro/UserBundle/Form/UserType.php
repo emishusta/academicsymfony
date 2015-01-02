@@ -21,6 +21,7 @@ class UserType extends AbstractType
                     'second_options' => array('label' => 'Repeat Password'),
                 )
             )
+            ->add('avatar_file', 'file')
             ->add('save', 'submit', array('label' => 'Create User'));
     }
 

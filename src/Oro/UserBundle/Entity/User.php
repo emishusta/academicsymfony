@@ -4,9 +4,15 @@ namespace Oro\UserBundle\Entity;
 
 use Symfony\Component\Security\Core\User\UserInterface;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
  * @ORM\Entity
+ * @ORM\HasLifecycleCallbacks
+ * @UniqueEntity("email")
+ * @UniqueEntity("username")
  */
 class User implements UserInterface, \Serializable
 {
@@ -33,9 +39,9 @@ class User implements UserInterface, \Serializable
     protected $fullname;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(name="avatar_path", type="string", length=255, nullable=true)
      */
-    protected $avatar;
+    protected $avatarPath;
 
     /**
      * @ORM\Column(type="string", length=255)
@@ -48,6 +54,13 @@ class User implements UserInterface, \Serializable
     protected $salt;
 
     protected $roles;
+
+    /**
+     * @Assert\File(maxSize="3000000")
+     */
+    private $avatarFile;
+
+    private $avatarTemp;
 
     public function __construct()
     {
@@ -207,26 +220,13 @@ class User implements UserInterface, \Serializable
     }
 
     /**
-     * Set avatar
+     * Get file.
      *
-     * @param string $avatar
-     * @return User
+     * @return UploadedFile
      */
-    public function setAvatar($avatar)
+    public function getAvatarFile()
     {
-        $this->avatar = $avatar;
-
-        return $this;
-    }
-
-    /**
-     * Get avatar
-     *
-     * @return string 
-     */
-    public function getAvatar()
-    {
-        return $this->avatar;
+        return $this->avatarFile;
     }
 
     /**
@@ -253,5 +253,113 @@ class User implements UserInterface, \Serializable
         $this->salt = $salt;
 
         return $this;
+    }
+
+    /**
+     * @return null|string
+     */
+    public function getAvatarAbsolutePath()
+    {
+        return null === $this->avatarPath
+            ? null
+            : $this->getUploadRootDir().'/'.$this->id.'.'.$this->avatarPath;
+    }
+
+    /**
+     * @return null|string
+     */
+    public function getAvatarWebPath()
+    {
+        return null === $this->avatarPath
+            ? null
+            : $this->getUploadDir().'/'.$this->id.'.'.$this->avatarPath;
+    }
+
+    /**
+     * @return string
+     */
+    protected function getUploadRootDir()
+    {
+        return __DIR__.'/../../../../web'.$this->getUploadDir();
+    }
+
+    /**
+     * @return string
+     */
+    protected function getUploadDir()
+    {
+        return '/uploads/avatars';
+    }
+
+    /**
+     * Sets file.
+     *
+     * @param UploadedFile $file
+     */
+    public function setAvatarFile(UploadedFile $file = null)
+    {
+        $this->avatarFile = $file;
+        // check if we have an old image path
+        if (is_file($this->getAvatarAbsolutePath())) {
+            // store the old name to delete after the update
+            $this->avatarTemp = $this->getAvatarAbsolutePath();
+        }
+
+        $this->avatarPath = 'initial';
+    }
+
+    /**
+     * @ORM\PrePersist()
+     * @ORM\PreUpdate()
+     */
+    public function preUpload()
+    {
+        if (null !== $this->getAvatarFile()) {
+            $this->avatarPath = $this->getAvatarFile()->guessExtension();
+        }
+    }
+
+    /**
+     * @ORM\PostPersist()
+     * @ORM\PostUpdate()
+     */
+    public function upload()
+    {
+        if (null === $this->getAvatarFile()) {
+            return;
+        }
+
+        // check if we have an old image
+        if (isset($this->avatarTemp)) {
+            // delete the old image
+            unlink($this->avatarTemp);
+            // clear the temp image path
+            $this->avatarTemp = null;
+        }
+
+        $this->getAvatarFile()->move(
+            $this->getUploadRootDir(),
+            $this->id.'.'.$this->getAvatarFile()->guessExtension()
+        );
+
+        $this->setAvatarFile(null);
+    }
+
+    /**
+     * @ORM\PreRemove()
+     */
+    public function storeFilenameForRemove()
+    {
+        $this->avatarTemp = $this->getAvatarAbsolutePath();
+    }
+
+    /**
+     * @ORM\PostRemove()
+     */
+    public function removeUpload()
+    {
+        if (isset($this->avatarTemp)) {
+            unlink($this->avatarTemp);
+        }
     }
 }

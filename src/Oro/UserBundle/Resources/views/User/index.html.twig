@@ -1,6 +1,33 @@
 {% extends 'base.html.twig' %}
 
+{% block title %} {% trans %}Users List{% endtrans %} {% endblock %}
+
 {% block body %}
-    <h1>{% trans %}Users{% endtrans %}</h1>
+    <h1>{% trans %}Users List{% endtrans %}</h1>
     <a href="{{ path('_user_new') }}">{% trans %}Add New User{% endtrans %}</a>
+    <table border="1">
+        <thead>
+            <tr>
+                <th>{% trans %}ID{% endtrans %}</th>
+                <th>{% trans %}Email{% endtrans %}</th>
+                <th>{% trans %}Username{% endtrans %}</th>
+                <th>{% trans %}Full Name{% endtrans %}</th>
+                <th>{% trans %}Avatar{% endtrans %}</th>
+                <th colspan="2">{% trans %}Actions{% endtrans %}</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for user in users %}
+                <tr>
+                    <td>{{ user.id }}</td>
+                    <td>{{ user.email }}</td>
+                    <td>{{ user.username }}</td>
+                    <td>{{ user.fullname }}</td>
+                    <td><img src="{{ user.avatarWebPath }}" border="0" height="100" /></td>
+                    <td><a href="{{ path('_user_delete', {'userId': user.id}) }}">{% trans %}Delete{% endtrans %}</a></td>
+                    <td><a href="{{ path('_user_edit', {'userId': user.id}) }}">{% trans %}Edit{% endtrans %}</a></td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
 {% endblock %}
