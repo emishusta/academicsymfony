@@ -136,7 +136,13 @@ class UserController extends Controller
             $flash = $this->get('braincrafted_bootstrap.flash');
             $flash->success('The User Data has been saved!');
 
-            return new RedirectResponse($this->generateUrl('_user'));
+            if ($isCurrentUser) {
+                $url = $this->generateUrl('_user_edit', array('userId' => $userId));
+            } else {
+                $url = $this->generateUrl('_user');
+            }
+
+            return new RedirectResponse($url);
         }
 
         return array('form' => $form->createView());
