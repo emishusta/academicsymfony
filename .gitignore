@@ -11,3 +11,7 @@
 /composer.phar
 /.idea
 /web/uploads/
+**/bootstrap*
+composer.lock
+/web/fonts/*
+/web/js/jquery*

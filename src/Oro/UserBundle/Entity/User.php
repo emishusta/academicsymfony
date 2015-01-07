@@ -53,15 +53,26 @@ class User implements UserInterface, \Serializable
      */
     protected $salt;
 
-    protected $roles;
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    protected $role;
 
     /**
      * @Assert\File(maxSize="3000000")
      */
     private $avatarFile;
 
+    /**
+     * Temporary container for avatar path
+     *
+     * @var string
+     */
     private $avatarTemp;
 
+    /**
+     * Set default values
+     */
     public function __construct()
     {
         $this->salt = sha1(uniqid(mt_rand(), true));
@@ -73,13 +84,9 @@ class User implements UserInterface, \Serializable
      *
      * @return array The user roles
      */
-    public function getRoles()
+    public function getRole()
     {
-        $roles = $this->roles;
-
-        $roles[] = static::ROLE_USER;
-
-        return array_unique($roles);
+        return $this->role;
     }
 
     /**
@@ -117,7 +124,6 @@ class User implements UserInterface, \Serializable
      */
     public function eraseCredentials()
     {
-        $this->password = null;
     }
 
     /**
@@ -243,6 +249,19 @@ class User implements UserInterface, \Serializable
     }
 
     /**
+     * Set User role
+     *
+     * @param $role
+     * @return $this
+     */
+    public function setRole($role)
+    {
+        $this->role = $role;
+
+        return $this;
+    }
+
+    /**
      * Set salt
      *
      * @param string $salt
@@ -361,5 +380,13 @@ class User implements UserInterface, \Serializable
         if (isset($this->avatarTemp)) {
             unlink($this->avatarTemp);
         }
+    }
+
+    /**
+     * @return array
+     */
+    public function getRoles()
+    {
+        return array($this->getRole());
     }
 }

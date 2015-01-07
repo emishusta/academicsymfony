@@ -7,7 +7,10 @@ use Oro\UserBundle\Form\UserType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\Security\Core\SecurityContext;
+use Symfony\Component\HttpFoundation\Request;
 
 class UserController extends Controller
 {
@@ -17,9 +20,22 @@ class UserController extends Controller
      */
     public function indexAction()
     {
-        $users = $this->getDoctrine()
+        $securityContext = $this->container->get('security.context');
+        if (false === $securityContext->isGranted('ROLE_SUPER_ADMIN')) {
+            $flash = $this->get('braincrafted_bootstrap.flash');
+            $flash->alert('Access Denied!');
+            return array();
+        }
+
+        //get all users but current user
+        $query = $this->getDoctrine()
             ->getRepository('Oro\UserBundle\Entity\User')
-            ->findAll();
+            ->createQueryBuilder('u')
+            ->where('u.id != :userId')
+            ->setParameter('userId', $securityContext->getToken()->getUser()->getId())
+            ->getQuery();
+
+        $users = $query->getResult();
 
         return array('users' => $users);
     }
@@ -30,6 +46,12 @@ class UserController extends Controller
      */
     public function newAction()
     {
+        if (false === $this->container->get('security.context')->isGranted('ROLE_SUPER_ADMIN')) {
+            $flash = $this->get('braincrafted_bootstrap.flash');
+            $flash->alert('Access Denied!');
+            return array();
+        }
+
         $user = new User();
         $form = $this->get('form.factory')->create(new UserType(), $user);
 
@@ -43,8 +65,8 @@ class UserController extends Controller
                 $dbManager->persist($user);
                 $dbManager->flush();
 
-                $session = $this->getRequest()->getSession();
-                $session->getFlashBag()->add('message', 'The User has been saved!');
+                $flash = $this->get('braincrafted_bootstrap.flash');
+                $flash->success('The User has been saved!');
 
                 return new RedirectResponse($this->generateUrl('_user'));
             }
@@ -59,6 +81,14 @@ class UserController extends Controller
      */
     public function editAction($userId)
     {
+        $securityContext = $this->container->get('security.context');
+        $isCurrentUser = $securityContext->getToken()->getUser()->getId() == $userId;
+        if (false === $securityContext->isGranted('ROLE_SUPER_ADMIN') && !$isCurrentUser) {
+            $flash = $this->get('braincrafted_bootstrap.flash');
+            $flash->alert('Access Denied!');
+            return array();
+        }
+
         $dbManager = $this->getDoctrine()->getManager();
         /** @var User $user */
         $user = $dbManager->getRepository('Oro\UserBundle\Entity\User')
@@ -76,9 +106,21 @@ class UserController extends Controller
         $options = $passwordField->getConfig()->getOptions();
         $type = $passwordField->getConfig()->getType()->getName();
         $options['required'] = false;
+        $options['first_options'] = array_merge(
+            $options['first_options'],
+            array('attr' => array('help_text' => 'Leave empty to use current.'))
+        );
+        $options['second_options'] = array_merge(
+            $options['second_options'],
+            array('attr' => array('help_text' => 'Leave empty to use current.'))
+        );
         $form->add('password', $type, $options)
-            ->add('save', 'submit', array('label' => 'Update User'))
-            ->add('avatar_file', 'file', array('required' => false));
+            ->add('save', 'submit', array('label' => 'Update'))
+            ->add('avatar_file', 'file', array(
+                    'required' => false,
+                    'attr' => array('help_text' => 'Leave empty to use current.')
+                )
+            );
 
         $request = $this->get('request');
         if ($request->isMethod('POST') && $form->submit($request)->isValid()) {
@@ -91,8 +133,8 @@ class UserController extends Controller
 
             $dbManager->flush();
 
-            $session = $this->getRequest()->getSession();
-            $session->getFlashBag()->add('message', 'The User Data has been saved!');
+            $flash = $this->get('braincrafted_bootstrap.flash');
+            $flash->success('The User Data has been saved!');
 
             return new RedirectResponse($this->generateUrl('_user'));
         }
@@ -100,25 +142,52 @@ class UserController extends Controller
         return array('form' => $form->createView());
     }
 
-    /**
-     * @Route("/user/delete/{userId}", name="_user_delete", requirements={"userId": "\d+"})
-     */
-    public function deleteAction($userId)
-    {
-        $dbManager = $this->getDoctrine()->getManager();
-        /** @var User $user */
-        $user = $dbManager->getRepository('Oro\UserBundle\Entity\User')
-            ->find($userId);
 
-        if (!$user) {
-            throw $this->createNotFoundException('Unable to find user entity.');
+
+    /**
+     * @Route("/login", name="_user_login")
+     * @Template()
+     */
+    public function loginAction(Request $request)
+    {
+        if ($request->attributes->has(SecurityContext::AUTHENTICATION_ERROR)) {
+            $error = $request->attributes->get(SecurityContext::AUTHENTICATION_ERROR);
+        } else {
+            $error = $request->getSession()->get(SecurityContext::AUTHENTICATION_ERROR);
         }
 
-        $dbManager->remove($user);
-        $dbManager->flush();
+        $data = array(
+            '_username' => $request->getSession()->get(SecurityContext::LAST_USERNAME)
+        );
 
-        $session = $this->getRequest()->getSession();
-        $session->getFlashBag()->add('message', 'The User has been deleted!');
-        return new RedirectResponse($this->generateUrl('_user'));
+        $form =  $this->get('form.factory')
+            ->createNamedBuilder(null, 'form', $data, array('action' => $this->generateUrl('login_check')))
+            ->add('_username', 'text')
+            ->add('_password', 'password')
+            ->add('login', 'submit', array('label' => 'Login'))
+            ->getForm();
+
+        if (!empty($error)) {
+            $formError = new FormError($error->getMessage());
+            $form->addError($formError);
+        }
+
+        return array(
+            'form' => $form->createView()
+        );
+    }
+
+    /**
+     * @Route("/login_check", name="login_check")
+     */
+    public function loginCheckAction()
+    {
+    }
+
+    /**
+     * @Route("/logout", name="logout")
+     */
+    public function logoutAction()
+    {
     }
 }

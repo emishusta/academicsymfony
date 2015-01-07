@@ -33,11 +33,18 @@ assetic:
     bundles:        [ ]
     #java: /usr/bin/java
     filters:
+        less:
+            node: /usr/bin/node
+            node_paths: [/usr/lib/node_modules]
+            apply_to: "\.less$"
         cssrewrite: ~
         #closure:
         #    jar: "%kernel.root_dir%/Resources/java/compiler.jar"
         #yui_css:
         #    jar: "%kernel.root_dir%/Resources/java/yuicompressor-2.4.7.jar"
+
+braincrafted_bootstrap:
+    less_filter: less
 
 # Doctrine Configuration
 doctrine:
@@ -67,3 +74,9 @@ swiftmailer:
     username:  "%mailer_user%"
     password:  "%mailer_password%"
     spool:     { type: memory }
+
+services:
+    oro_userbundle.configure_menu_listener:
+        class: Oro\UserBundle\EventListener\ConfigureMenuListener
+        tags:
+          - { name: kernel.event_listener, event: app.menu_configure, method: onMenuConfigure }

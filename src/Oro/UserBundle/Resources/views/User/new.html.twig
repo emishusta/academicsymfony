@@ -3,11 +3,13 @@
 {% block title %} {% trans %}Create New User{% endtrans %} {% endblock %}
 
 {% block body %}
-    <h1>{% trans %}Create new user{% endtrans %}</h1>
-    <a href="{{ path('_user') }}">{% trans %}Back to Users List{% endtrans %}</a>
-    <br/>
-    <br/>
-    {{ form_start(form) }}
-    {{ form_widget(form) }}
-    {{ form_end(form) }}
+    {% if form is defined and form %}
+        <h1>{% trans %}Create new user{% endtrans %}</h1>
+        <p>
+            <a href="{{ path('_user') }}">{% trans %}Back{% endtrans %}</a>
+        </p>
+        {{ form_start(form) }}
+        {{ form_widget(form) }}
+        {{ form_end(form) }}
+    {% endif %}
 {% endblock %}

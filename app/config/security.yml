@@ -11,7 +11,7 @@ security:
         main:
             entity:
                 class: Oro\UserBundle\Entity\User
-                property: username;
+                property: username
 
     firewalls:
         dev:
@@ -19,18 +19,19 @@ security:
             security: false
 
         login:
-            pattern:  ^/demo/secured/login$
+            pattern:  ^/login$
             security: false
 
         secured_area:
-            pattern:    ^/demo/secured/
+            pattern:    ^/
+            anonymous: ~
             form_login:
-                check_path: _security_check
-                login_path: _demo_login
+                check_path: login_check
+                login_path: _user_login
             logout:
-                path:   _demo_logout
-                target: _demo
+                path:   /logout
+                target: _user_login
 
     access_control:
-        - { path: ^/demo/secured/hello/admin/, roles: ROLE_USER }
-        #- { path: ^/login, roles: IS_AUTHENTICATED_ANONYMOUSLY, requires_channel: https }
+        - { path: ^/, roles: ROLE_USER }
+        - { path: ^/login, roles: IS_AUTHENTICATED_ANONYMOUSLY}

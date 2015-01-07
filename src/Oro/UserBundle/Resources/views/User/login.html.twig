@@ -1,0 +1,28 @@
+{% extends 'base.html.twig' %}
+
+{% block title %} {% trans %}Login{% endtrans %} {% endblock %}
+
+{% block body %}
+    <div class="panel panel-default login-box">
+        <div class="panel-heading">{% trans %}Information{% endtrans %}</div>
+        <div class="panel-body">
+            <p>{% trans %}Please, run command from web application directory:{% endtrans %}</p>
+            <p>php app/console doctrine:fixtures:load</p>
+            <p>{% trans %}and there will be users:{% endtrans %}</p>
+            <ul>
+                <li>admin/123123q - Administrator role</li>
+                <li>manager/qa123123 - Manager role</li>
+                <li>operator/qa123123 - Operator role</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="panel panel-primary login-box">
+        <div class="panel-heading">{% trans %}Login{% endtrans %}</div>
+        <div class="panel-body">
+            {{ form_start(form) }}
+            {{ form_widget(form) }}
+            {{ form_end(form) }}
+        </div>
+    </div>
+{% endblock %}
