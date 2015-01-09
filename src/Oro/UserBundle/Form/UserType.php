@@ -33,6 +33,7 @@ class UserType extends AbstractType
                 ),
                 'required'  => true,
             ))
+            ->add('timezone', 'timezone')
             ->add('avatar_file', 'file')
             ->add('save', 'submit', array('label' => 'Create User'));
     }

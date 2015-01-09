@@ -61,6 +61,16 @@ class User implements UserInterface, \Serializable
     protected $role;
 
     /**
+     * @ORM\Column(type="string", length=255)
+     */
+    protected $timezone;
+
+    /**
+     * @ORM\Column(type="datetime")
+     */
+    protected $created;
+
+    /**
      * @Assert\File(maxSize="3000000")
      */
     private $avatarFile;
@@ -85,6 +95,7 @@ class User implements UserInterface, \Serializable
         $this->salt = sha1(uniqid(mt_rand(), true));
         $this->roles = array();
         $this->projects = new ArrayCollection();
+        $this->created = new \DateTime();
     }
 
     /**
@@ -452,5 +463,51 @@ class User implements UserInterface, \Serializable
     public function getProjects()
     {
         return $this->projects;
+    }
+
+    /**
+     * Set timezone
+     *
+     * @param string $timezone
+     * @return User
+     */
+    public function setTimezone($timezone)
+    {
+        $this->timezone = $timezone;
+
+        return $this;
+    }
+
+    /**
+     * Get timezone
+     *
+     * @return string 
+     */
+    public function getTimezone()
+    {
+        return $this->timezone;
+    }
+
+    /**
+     * Set created
+     *
+     * @param \DateTime $created
+     * @return User
+     */
+    public function setCreated($created)
+    {
+        $this->created = $created;
+
+        return $this;
+    }
+
+    /**
+     * Get created
+     *
+     * @return \DateTime 
+     */
+    public function getCreated()
+    {
+        return $this->created;
     }
 }

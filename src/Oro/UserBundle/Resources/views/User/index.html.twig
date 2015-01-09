@@ -24,8 +24,10 @@
                         <td>{{ user.id }}</td>
                         <td>{{ user.email }}</td>
                         <td>{{ user.username }}</td>
-                        <td>{{ user.fullname }}</td>
-                        <td>{{ user.role }}</td>
+                        <td>
+                            <a href="{{ path('_user_view', {'userId': user.id}) }}">{{ user.fullname }}</a>
+                        </td>
+                        <td>{{ user.role|trans }}</td>
                         <td><img class="thumbnail" src="{{ user.avatarWebPath }}" border="0" height="100" /></td>
                         <td class="text-center"><a href="{{ path('_user_edit', {'userId': user.id}) }}">{% trans %}Edit{% endtrans %}</a></td>
                     </tr>

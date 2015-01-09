@@ -23,6 +23,13 @@ class ConfigureMenuListener
 
         $menu->addChild($key)->setAttribute('dropdown', true);
         $menu->getChild($key)->addChild(
+            'View Profile',
+            array(
+                'route' => '_user_view',
+                'routeParameters' => array('userId' => $user->getId())
+            )
+        );
+        $menu->getChild($key)->addChild(
             'Edit Profile',
             array(
                 'route' => '_user_edit',

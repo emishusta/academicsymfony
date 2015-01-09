@@ -37,6 +37,7 @@ class LoadUserData implements FixtureInterface, ContainerAwareInterface
         $user->setUsername("admin");
         $user->setFullname('Admin Adminov');
         $user->setRole('ROLE_SUPER_ADMIN');
+        $user->setTimezone('Europe/Kiev');
         $encoder = $this->container->get('security.encoder_factory')->getEncoder($user);
         $user->setPassword($encoder->encodePassword('123123q', $user->getSalt()));
         $user->setEmail("admin@test.com");
@@ -47,6 +48,7 @@ class LoadUserData implements FixtureInterface, ContainerAwareInterface
         $user->setUsername("manager");
         $user->setFullname('Manager Managerov');
         $user->setRole('ROLE_ADMIN');
+        $user->setTimezone('Europe/Kiev');
         $encoder = $this->container->get('security.encoder_factory')->getEncoder($user);
         $user->setPassword($encoder->encodePassword('qa123123', $user->getSalt()));
         $user->setEmail("manager@test.com");
@@ -57,6 +59,7 @@ class LoadUserData implements FixtureInterface, ContainerAwareInterface
         $user->setUsername("operator");
         $user->setFullname('Operator Oper');
         $user->setRole('ROLE_USER');
+        $user->setTimezone('Europe/Kiev');
         $encoder = $this->container->get('security.encoder_factory')->getEncoder($user);
         $user->setPassword($encoder->encodePassword('qa123123', $user->getSalt()));
         $user->setEmail("operator@test.com");

@@ -1,0 +1,52 @@
+{% extends 'base.html.twig' %}
+
+{% block title %} {% trans %}User Profile Page{% endtrans %} {% endblock %}
+
+{% block body %}
+
+    {% if user is defined %}
+        <p>
+            <a href="javascript:history.back()">{% trans %}Back{% endtrans %}</a>
+        </p>
+
+        {% if isAllowedToEdit %}
+            <p>
+                <a class="btn btn-primary" href="{{ path('_user_edit', {'userId': user.id}) }}">
+                    {% trans %}Edit User Profile{% endtrans %}
+                </a>
+            </p>
+        {% endif %}
+
+        <div class="row">
+            <div class="col-md-8">
+                <div class="panel panel-default">
+                    <div class="panel-heading">{% trans %}User Information{% endtrans %}</div>
+                    <div class="panel-body">
+                        <p><img class="thumbnail" src="{{ user.avatarWebPath }}" border="0" height="100" /></p>
+                        <p>{% trans %}Email{% endtrans %}: {{ user.email }}</p>
+                        <p>{% trans %}Username{% endtrans %}: {{ user.username }}</p>
+                        <p>{% trans %}Full Name{% endtrans %}: {{ user.fullname }}</p>
+                        <p>{% trans %}Role{% endtrans %}: {{ user.role|trans }}</p>
+                        <p>{% trans %}Created{% endtrans %}: {{ user.created|date('m/d/Y H:i', app.user.timezone) }}</p>
+                    </div>
+                </div>
+                <div class="panel panel-default">
+                    <div class="panel-heading">{% trans %}Issues{% endtrans %}</div>
+                    <div class="panel-body">
+                        TODO: List of issues where user is assigned
+                    </div>
+                </div>
+                <div class="panel panel-default">
+                    <div class="panel-heading">{% trans %}Comments{% endtrans %}</div>
+                    <div class="panel-body">
+                        TODO: List of comments
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                TODO: Activities list
+            </div>
+        </div>
+    {% endif %}
+
+{% endblock %}

@@ -196,4 +196,32 @@ class UserController extends Controller
     public function logoutAction()
     {
     }
+
+    /**
+     * @Route("/user/view/{userId}", name="_user_view", requirements={"userId": "\d+"})
+     * @Template()
+     */
+    public function viewAction($userId)
+    {
+        $dbManager = $this->getDoctrine()->getManager();
+        /** @var User $user */
+        $user = $dbManager->getRepository('Oro\UserBundle\Entity\User')
+            ->find($userId);
+
+        if (!$user) {
+            throw $this->createNotFoundException('Unable to find User entity.');
+        }
+
+        $isAllowedToEdit = false;
+        $securityContext = $this->container->get('security.context');
+        $isCurrentUser = $securityContext->getToken()->getUser()->getId() == $userId;
+        if (false !== $securityContext->isGranted('ROLE_SUPER_ADMIN') || $isCurrentUser) {
+            $isAllowedToEdit = true;
+        }
+
+        return array(
+            'user' => $user,
+            'isAllowedToEdit' => $isAllowedToEdit,
+        );
+    }
 }
