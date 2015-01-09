@@ -2,6 +2,7 @@
 
 namespace Oro\UserBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
@@ -11,6 +12,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 /**
  * @ORM\Entity
  * @ORM\HasLifecycleCallbacks
+ * @ORM\Table(name="oro_user")
  * @UniqueEntity("email")
  * @UniqueEntity("username")
  */
@@ -71,12 +73,18 @@ class User implements UserInterface, \Serializable
     private $avatarTemp;
 
     /**
+     * @ORM\ManyToMany(targetEntity="Oro\ProjectBundle\Entity\Project", mappedBy="members")
+     **/
+    private $projects;
+
+    /**
      * Set default values
      */
     public function __construct()
     {
         $this->salt = sha1(uniqid(mt_rand(), true));
         $this->roles = array();
+        $this->projects = new ArrayCollection();
     }
 
     /**
@@ -388,5 +396,61 @@ class User implements UserInterface, \Serializable
     public function getRoles()
     {
         return array($this->getRole());
+    }
+
+    /**
+     * Set avatarPath
+     *
+     * @param string $avatarPath
+     * @return User
+     */
+    public function setAvatarPath($avatarPath)
+    {
+        $this->avatarPath = $avatarPath;
+
+        return $this;
+    }
+
+    /**
+     * Get avatarPath
+     *
+     * @return string 
+     */
+    public function getAvatarPath()
+    {
+        return $this->avatarPath;
+    }
+
+    /**
+     * Add projects
+     *
+     * @param \Oro\ProjectBundle\Entity\Project $projects
+     * @return User
+     */
+    public function addProject(\Oro\ProjectBundle\Entity\Project $projects)
+    {
+        $this->projects[] = $projects;
+
+        return $this;
+    }
+
+    /**
+     * Remove projects
+     *
+     * @param \Oro\ProjectBundle\Entity\Project $projects
+     */
+    public function removeProject(\Oro\ProjectBundle\Entity\Project $projects)
+    {
+        $this->projects->removeElement($projects);
+    }
+
+    /**
+     * Get projects
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getProjects()
+    {
+        return $this->projects;
     }
 }

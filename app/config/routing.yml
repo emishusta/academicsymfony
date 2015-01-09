@@ -5,3 +5,6 @@ app:
 # OroUserBundle routes
 _oro_user:
     resource: "@OroUserBundle/Resources/config/routing.yml"
+
+_oro_project:
+    resource: "@OroProjectBundle/Resources/config/routing.yml"

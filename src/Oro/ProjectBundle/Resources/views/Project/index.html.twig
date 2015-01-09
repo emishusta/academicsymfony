@@ -1,0 +1,31 @@
+{% extends 'base.html.twig' %}
+
+{% block title %} {% trans %}Projects List{% endtrans %} {% endblock %}
+
+{% block body %}
+    {% if is_granted('ROLE_SUPER_ADMIN') or is_granted('ROLE_ADMIN') %}
+        <p><a href="{{ path('_project_new') }}">{% trans %}Add New Project{% endtrans %}</a></p>
+    {% endif %}
+
+    {% if projects %}
+        <table class="table">
+            <thead>
+            <tr>
+                <th>{% trans %}Code{% endtrans %}</th>
+                <th>{% trans %}Project Label{% endtrans %}</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for project in projects %}
+                <tr>
+                    <td>{{ project.code }}</td>
+                    <td><a href="{{ path('_project_view', {'projectId': project.id}) }}">{{ project.label }}</a></td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p>{% trans %}There are no projects {% endtrans %}</p>
+    {% endif %}
+
+{% endblock %}

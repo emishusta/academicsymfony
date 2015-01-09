@@ -1,0 +1,3 @@
+_user:
+    resource: "@OroProjectBundle/Controller/ProjectController.php"
+    type:     annotation

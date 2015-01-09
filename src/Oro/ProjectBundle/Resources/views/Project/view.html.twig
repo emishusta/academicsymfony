@@ -1,0 +1,52 @@
+{% extends 'base.html.twig' %}
+
+{% block title %} {% trans %}Project View Page{% endtrans %} {% endblock %}
+
+{% block body %}
+
+    {% if project is defined %}
+        <p>
+            <a href="javascript:history.back()">{% trans %}Back{% endtrans %}</a>
+        </p>
+
+        <h1>{{ project.code }} - {{ project.label }}</h1>
+
+        {% if is_granted('ROLE_ADMIN') %}
+            <p>
+                <a class="btn btn-primary" href="{{ path('_project_edit', {'projectId': project.id}) }}">{% trans %}Edit Project{% endtrans %}</a>
+            </p>
+        {% endif %}
+
+        <div class="row">
+            <div class="col-md-8">
+                <div class="panel panel-default">
+                    <div class="panel-heading">{% trans %}Summary{% endtrans %}</div>
+                    <div class="panel-body">
+                        {{ project.summary }}
+                    </div>
+                </div>
+                <div class="panel panel-default">
+                    <div class="panel-heading">{% trans %}Issues{% endtrans %}</div>
+                    <div class="panel-body">
+                        TODO: List of issues
+                    </div>
+                </div>
+                <div class="panel panel-default">
+                    <div class="panel-heading">{% trans %}Comments{% endtrans %}</div>
+                    <div class="panel-body">
+                        TODO: List of comments
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <ul>
+                    {% for member in project.getMembers %}
+                        <li><a href="#">{{ member.fullname }}</a></li>
+                    {% endfor %}
+                </ul>
+                TODO: Activities list
+            </div>
+        </div>
+    {% endif %}
+
+{% endblock %}

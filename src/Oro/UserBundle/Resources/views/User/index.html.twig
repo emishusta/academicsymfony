@@ -3,7 +3,7 @@
 {% block title %} {% trans %}Users List{% endtrans %} {% endblock %}
 
 {% block body %}
-    {% if users is defined and users %}
+    {% if users is defined %}
         <h1>{% trans %}Users List{% endtrans %}</h1>
         <a href="{{ path('_user_new') }}">{% trans %}Add New User{% endtrans %}</a>
         <table class="table">

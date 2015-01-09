@@ -1,0 +1,15 @@
+{% extends 'base.html.twig' %}
+
+{% block title %} {% trans %}Create New Project{% endtrans %} {% endblock %}
+
+{% block body %}
+    {% if form is defined and form %}
+        <h1>{% trans %}Create New Project{% endtrans %}</h1>
+        <p>
+            <a href="{{ path('_project') }}">{% trans %}Back{% endtrans %}</a>
+        </p>
+        {{ form_start(form) }}
+        {{ form_widget(form) }}
+        {{ form_end(form) }}
+    {% endif %}
+{% endblock %}

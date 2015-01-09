@@ -1,0 +1,15 @@
+{% extends 'base.html.twig' %}
+
+{% block title %} {% trans %}Edit Project{% endtrans %} {% endblock %}
+
+{% block body %}
+    {% if form is defined and form %}
+        <h1>{% trans %}Edit Project{% endtrans %}</h1>
+        <p>
+            <a href="javascript:history.back()">{% trans %}Back{% endtrans %}</a>
+        </p>
+        {{ form_start(form) }}
+        {{ form_widget(form) }}
+        {{ form_end(form) }}
+    {% endif %}
+{% endblock %}
