@@ -1,0 +1,84 @@
+{% extends 'base.html.twig' %}
+
+{% block title %} {% trans %}Issue View Page{% endtrans %} {% endblock %}
+
+{% block body %}
+
+    {% if issue is defined %}
+        <p>
+            <a href="javascript:history.back()">{% trans %}Back{% endtrans %}</a>
+        </p>
+
+        <p>
+            <a href="{{ path('_project_view', {'projectId': issue.project.id}) }}">{{ issue.project.label }}</a> /
+            {% if issue.parent %}
+                <a href="{{ path('_issue_view', {'issueId': issue.parent.id}) }}">{{ issue.parent.code }} {{ issue.parent.summary }}</a> /
+            {% endif %}
+            {{ issue.code }}
+        </p>
+        <h3>
+            {{ issue.summary }}
+        </h3>
+
+        <p>
+            <a class="btn btn-primary" href="{{ path('_issue_update', {'issueId': issue.id}) }}">{% trans %}Edit Issue{% endtrans %}</a>
+        </p>
+
+        <div class="row">
+            <div class="col-md-8">
+                <div class="panel panel-default">
+                    <div class="panel-heading">{% trans %}Details{% endtrans %}</div>
+                    <div class="panel-body">
+                        <p>{% trans %}Type{% endtrans %}: {{ issue.type|trans }}</p>
+                        <p>
+                            {% trans %}Assignee{% endtrans %}: <a href="{{ path('_user_view', {'userId': issue.assignee.id}) }}">{{ issue.assignee.fullname }}</a>
+                        </p>
+                        <p>
+                            {% trans %}Reporter{% endtrans %}: <a href="{{ path('_user_view', {'userId': issue.reporter.id}) }}">{{ issue.reporter.fullname }}</a>
+                        </p>
+                        <p>{% trans %}Priority{% endtrans %}: {{ issue.priority|trans }}</p>
+                        <p>{% trans %}Status{% endtrans %}: {{ issue.status|trans }}</p>
+                        <p>{% trans %}Resolution{% endtrans %}: {{ issue.resolution|trans }}</p>
+                        <p>
+                            {% trans %}Created{% endtrans %}: {{ issue.created|date('m/d/Y H:i', app.user.timezone) }}
+                        </p>
+                        {% if issue.updated %}
+                            <p>
+                                {% trans %}Updated{% endtrans %}: {{ issue.updated|date('m/d/Y H:i', app.user.timezone) }}
+                            </p>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="panel panel-default">
+                    <div class="panel-heading">{% trans %}Description{% endtrans %}</div>
+                    <div class="panel-body">
+                        {{ issue.description }}
+                    </div>
+                </div>
+                {% if issue.children is not empty %}
+                    <div class="panel panel-default">
+                        <div class="panel-heading">{% trans %}Sub-Tasks{% endtrans %}</div>
+                        <div class="panel-body">
+                            <ul>
+                                {% for child in issue.children %}
+                                    <li><a href="{{ path('_issue_view', {'issueId': child.id}) }}">{{ child.code }} - {{ child.summary }}</a></li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    </div>
+                {% endif %}
+                <div class="panel panel-default">
+                    <div class="panel-heading">{% trans %}Comments{% endtrans %}</div>
+                    <div class="panel-body">
+                        TODO: List of comments
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                TODO: collaborators
+                TODO: Activities list
+            </div>
+        </div>
+    {% endif %}
+
+{% endblock %}

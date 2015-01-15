@@ -10,7 +10,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="Oro\UserBundle\Entity\UserRepository")
  * @ORM\HasLifecycleCallbacks
  * @ORM\Table(name="oro_user")
  * @UniqueEntity("email")
@@ -88,6 +88,16 @@ class User implements UserInterface, \Serializable
     private $projects;
 
     /**
+     * @ORM\OneToMany(targetEntity="Oro\IssueBundle\Entity\Issue", mappedBy="reporter")
+     */
+    protected $reporterIssues;
+
+    /**
+     * @ORM\OneToMany(targetEntity="Oro\IssueBundle\Entity\Issue", mappedBy="assignee")
+     */
+    protected $assignedIssues;
+
+    /**
      * Set default values
      */
     public function __construct()
@@ -96,6 +106,8 @@ class User implements UserInterface, \Serializable
         $this->roles = array();
         $this->projects = new ArrayCollection();
         $this->created = new \DateTime();
+        $this->reporterIssues = new ArrayCollection();
+        $this->assignedIssues = new ArrayCollection();
     }
 
     /**
@@ -509,5 +521,71 @@ class User implements UserInterface, \Serializable
     public function getCreated()
     {
         return $this->created;
+    }
+
+    /**
+     * Add reporterIssues
+     *
+     * @param \Oro\IssueBundle\Entity\Issue $reporterIssues
+     * @return User
+     */
+    public function addReporterIssue(\Oro\IssueBundle\Entity\Issue $reporterIssues)
+    {
+        $this->reporterIssues[] = $reporterIssues;
+
+        return $this;
+    }
+
+    /**
+     * Remove reporterIssues
+     *
+     * @param \Oro\IssueBundle\Entity\Issue $reporterIssues
+     */
+    public function removeReporterIssue(\Oro\IssueBundle\Entity\Issue $reporterIssues)
+    {
+        $this->reporterIssues->removeElement($reporterIssues);
+    }
+
+    /**
+     * Get reporterIssues
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getReporterIssues()
+    {
+        return $this->reporterIssues;
+    }
+
+    /**
+     * Add assignedIssues
+     *
+     * @param \Oro\IssueBundle\Entity\Issue $assignedIssues
+     * @return User
+     */
+    public function addAssignedIssue(\Oro\IssueBundle\Entity\Issue $assignedIssues)
+    {
+        $this->assignedIssues[] = $assignedIssues;
+
+        return $this;
+    }
+
+    /**
+     * Remove assignedIssues
+     *
+     * @param \Oro\IssueBundle\Entity\Issue $assignedIssues
+     */
+    public function removeAssignedIssue(\Oro\IssueBundle\Entity\Issue $assignedIssues)
+    {
+        $this->assignedIssues->removeElement($assignedIssues);
+    }
+
+    /**
+     * Get assignedIssues
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getAssignedIssues()
+    {
+        return $this->assignedIssues;
     }
 }

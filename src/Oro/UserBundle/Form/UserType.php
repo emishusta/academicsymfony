@@ -27,7 +27,7 @@ class UserType extends AbstractType
             )
             ->add('role', 'choice', array(
                 'choices'   => array(
-                    'ROLE_USER' => 'Operator', //TODO: change with translations later
+                    'ROLE_USER' => 'Operator',
                     'ROLE_ADMIN' => 'Manager',
                     'ROLE_SUPER_ADMIN' => 'Administrator'
                 ),
@@ -57,6 +57,6 @@ class UserType extends AbstractType
      */
     public function getName()
     {
-        return 'user_new';
+        return 'user_create';
     }
 }

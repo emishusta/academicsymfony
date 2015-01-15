@@ -5,7 +5,7 @@
 {% block body %}
     {% if users is defined %}
         <h1>{% trans %}Users List{% endtrans %}</h1>
-        <a href="{{ path('_user_new') }}">{% trans %}Add New User{% endtrans %}</a>
+        <a href="{{ path('_user_create') }}">{% trans %}Add New User{% endtrans %}</a>
         <table class="table">
             <thead>
                 <tr>
@@ -29,7 +29,7 @@
                         </td>
                         <td>{{ user.role|trans }}</td>
                         <td><img class="thumbnail" src="{{ user.avatarWebPath }}" border="0" height="100" /></td>
-                        <td class="text-center"><a href="{{ path('_user_edit', {'userId': user.id}) }}">{% trans %}Edit{% endtrans %}</a></td>
+                        <td class="text-center"><a href="{{ path('_user_update', {'userId': user.id}) }}">{% trans %}Edit{% endtrans %}</a></td>
                     </tr>
                 {% endfor %}
             </tbody>
