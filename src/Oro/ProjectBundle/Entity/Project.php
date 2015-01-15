@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="Oro\ProjectBundle\Entity\ProjectRepository")
  * @ORM\Table(name="oro_project")
  */
 class Project
@@ -41,11 +41,17 @@ class Project
     private $members;
 
     /**
+     * @ORM\OneToMany(targetEntity="Oro\IssueBundle\Entity\Issue", mappedBy="project")
+     */
+    private $issues;
+
+    /**
      * Sets default values
      */
     public function __construct()
     {
         $this->members = new ArrayCollection();
+        $this->issues = new ArrayCollection();
     }
 
     /**
@@ -158,5 +164,48 @@ class Project
     public function getMembers()
     {
         return $this->members;
+    }
+
+    /**
+     * Add issues
+     *
+     * @param \Oro\IssueBundle\Entity\Issue $issues
+     * @return Project
+     */
+    public function addIssue(\Oro\IssueBundle\Entity\Issue $issues)
+    {
+        $this->issues[] = $issues;
+
+        return $this;
+    }
+
+    /**
+     * Remove issues
+     *
+     * @param \Oro\IssueBundle\Entity\Issue $issues
+     */
+    public function removeIssue(\Oro\IssueBundle\Entity\Issue $issues)
+    {
+        $this->issues->removeElement($issues);
+    }
+
+    /**
+     * Get issues
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getIssues()
+    {
+        return $this->issues;
+    }
+
+    /**
+     * Get extended label for project
+     *
+     * @return string
+     */
+    public function getFullLabel()
+    {
+        return $this->code . ' - '. $this->label;
     }
 }

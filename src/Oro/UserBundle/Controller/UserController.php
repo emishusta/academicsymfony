@@ -15,7 +15,7 @@ use Symfony\Component\HttpFoundation\Request;
 class UserController extends Controller
 {
     /**
-     * @Route("/user", name="_user")
+     * @Route("/", name="_user")
      * @Template()
      */
     public function indexAction()
@@ -41,10 +41,10 @@ class UserController extends Controller
     }
 
     /**
-     * @Route("/user/new", name="_user_new")
+     * @Route("/create", name="_user_create")
      * @Template()
      */
-    public function newAction()
+    public function createAction()
     {
         if (false === $this->container->get('security.context')->isGranted('ROLE_SUPER_ADMIN')) {
             $flash = $this->get('braincrafted_bootstrap.flash');
@@ -76,10 +76,10 @@ class UserController extends Controller
     }
 
     /**
-     * @Route("/user/edit/{userId}", name="_user_edit", requirements={"userId": "\d+"})
+     * @Route("/update/{userId}", name="_user_update", requirements={"userId": "\d+"})
      * @Template()
      */
-    public function editAction($userId)
+    public function updateAction($userId)
     {
         $securityContext = $this->container->get('security.context');
         $isCurrentUser = $securityContext->getToken()->getUser()->getId() == $userId;
@@ -137,7 +137,7 @@ class UserController extends Controller
             $flash->success('The User Data has been saved!');
 
             if ($isCurrentUser) {
-                $url = $this->generateUrl('_user_edit', array('userId' => $userId));
+                $url = $this->generateUrl('_user_update', array('userId' => $userId));
             } else {
                 $url = $this->generateUrl('_user');
             }
@@ -147,8 +147,6 @@ class UserController extends Controller
 
         return array('form' => $form->createView());
     }
-
-
 
     /**
      * @Route("/login", name="_user_login")
@@ -212,16 +210,12 @@ class UserController extends Controller
             throw $this->createNotFoundException('Unable to find User entity.');
         }
 
-        $isAllowedToEdit = false;
-        $securityContext = $this->container->get('security.context');
-        $isCurrentUser = $securityContext->getToken()->getUser()->getId() == $userId;
-        if (false !== $securityContext->isGranted('ROLE_SUPER_ADMIN') || $isCurrentUser) {
-            $isAllowedToEdit = true;
-        }
+        $issues = $dbManager->getRepository('OroIssueBundle:Issue')
+            ->getIssuesAssignedToUser($userId)->getQuery()->getResult();
 
         return array(
             'user' => $user,
-            'isAllowedToEdit' => $isAllowedToEdit,
+            'issues' => $issues
         );
     }
 }

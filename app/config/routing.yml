@@ -8,3 +8,6 @@ _oro_user:
 
 _oro_project:
     resource: "@OroProjectBundle/Resources/config/routing.yml"
+
+_oro_issue:
+    resource: "@OroIssueBundle/Resources/config/routing.yml"

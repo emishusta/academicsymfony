@@ -13,7 +13,7 @@
 
         {% if is_granted('ROLE_ADMIN') %}
             <p>
-                <a class="btn btn-primary" href="{{ path('_project_edit', {'projectId': project.id}) }}">{% trans %}Edit Project{% endtrans %}</a>
+                <a class="btn btn-primary" href="{{ path('_project_update', {'projectId': project.id}) }}">{% trans %}Edit Project{% endtrans %}</a>
             </p>
         {% endif %}
 
@@ -25,12 +25,23 @@
                         {{ project.summary }}
                     </div>
                 </div>
-                <div class="panel panel-default">
-                    <div class="panel-heading">{% trans %}Issues{% endtrans %}</div>
-                    <div class="panel-body">
-                        TODO: List of issues
-                    </div>
-                </div>
+                {% block project_issues %}
+                    {% if issues is defined %}
+                        <div class="panel panel-default">
+                            <div class="panel-heading">{% trans %}Issues{% endtrans %}</div>
+                            <div class="panel-body">
+                                <p>
+                                    <a class="btn btn-primary" href="{{ path('_issue_create', {'projectId': project.id}) }}">{% trans %}Create New Issue{% endtrans %}</a>
+                                </p>
+                                <ul>
+                                    {% for issue in issues %}
+                                        <li><a href="{{ path('_issue_view', {'issueId': issue.id}) }}">{{ issue.code }} - {{ issue.summary }}</a></li>
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                        </div>
+                    {% endif %}
+                {% endblock %}
                 <div class="panel panel-default">
                     <div class="panel-heading">{% trans %}Comments{% endtrans %}</div>
                     <div class="panel-body">
@@ -39,11 +50,16 @@
                 </div>
             </div>
             <div class="col-md-4">
-                <ul>
-                    {% for member in project.getMembers %}
-                        <li><a href="#">{{ member.fullname }}</a></li>
-                    {% endfor %}
-                </ul>
+                <div class="panel panel-default">
+                    <div class="panel-heading">{% trans %}Members{% endtrans %}</div>
+                    <div class="panel-body">
+                        <ul>
+                            {% for member in project.getMembers %}
+                                <li><a href="#">{{ member.fullname }}</a></li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
                 TODO: Activities list
             </div>
         </div>

@@ -1,0 +1,4 @@
+_user:
+    resource: "@OroIssueBundle/Controller/IssueController.php"
+    type:     annotation
+    prefix:   /issue

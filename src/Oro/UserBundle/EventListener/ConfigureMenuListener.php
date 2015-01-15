@@ -32,7 +32,7 @@ class ConfigureMenuListener
         $menu->getChild($key)->addChild(
             'Edit Profile',
             array(
-                'route' => '_user_edit',
+                'route' => '_user_update',
                 'routeParameters' => array('userId' => $user->getId())
             )
         );

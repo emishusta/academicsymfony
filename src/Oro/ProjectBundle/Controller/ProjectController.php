@@ -2,6 +2,7 @@
 
 namespace Oro\ProjectBundle\Controller;
 
+use Oro\IssueBundle\OroIssueBundle;
 use Oro\ProjectBundle\Entity\Project;
 use Oro\ProjectBundle\Form\ProjectType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -13,9 +14,8 @@ use Symfony\Component\HttpFoundation\Request;
 
 class ProjectController extends Controller
 {
-
     /**
-     * @Route("/project", name="_project")
+     * @Route("/", name="_project")
      * @Template()
      */
     public function indexAction()
@@ -40,10 +40,10 @@ class ProjectController extends Controller
     }
 
     /**
-     * @Route("/project/new", name="_project_new")
+     * @Route("/create", name="_project_create")
      * @Template()
      */
-    public function newAction()
+    public function createAction()
     {
         $project = new Project();
         $form = $this->get('form.factory')->create(new ProjectType(), $project);
@@ -67,7 +67,7 @@ class ProjectController extends Controller
     }
 
     /**
-     * @Route("/project/view/{projectId}", name="_project_view", requirements={"projectId": "\d+"})
+     * @Route("/view/{projectId}", name="_project_view", requirements={"projectId": "\d+"})
      * @Template()
      */
     public function viewAction($projectId)
@@ -90,14 +90,21 @@ class ProjectController extends Controller
             return array();
         }
 
-        return array('project' => $project);
+        $issues = $dbManager->getRepository('OroIssueBundle:Issue')
+            ->getIssuesByProject($projectId)->getQuery()->getResult();
+
+
+        return array(
+            'project' => $project,
+            'issues' => $issues,
+        );
     }
 
     /**
-     * @Route("/project/edit/{projectId}", name="_project_edit", requirements={"projectId": "\d+"})
+     * @Route("/update/{projectId}", name="_project_update", requirements={"projectId": "\d+"})
      * @Template()
      */
-    public function editAction($projectId)
+    public function updateAction($projectId)
     {
         $securityContext = $this->container->get('security.context');
         if ($securityContext->isGranted('ROLE_ADMIN') === false) {

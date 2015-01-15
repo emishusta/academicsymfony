@@ -1,3 +1,4 @@
 _user:
     resource: "@OroProjectBundle/Controller/ProjectController.php"
     type:     annotation
+    prefix:   /project

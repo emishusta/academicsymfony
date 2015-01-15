@@ -1,0 +1,55 @@
+{% extends 'base.html.twig' %}
+
+{% block title %} {% trans %}Issues List{% endtrans %} {% endblock %}
+
+{% block body %}
+    <a class="btn btn-primary" href="{{ path('_issue_create') }}">{% trans %}Create New Issue{% endtrans %}</a>
+    {% if issues is defined and issues %}
+        <table class="table">
+            <thead>
+            <tr>
+                <th>{% trans %}Type{% endtrans %}</th>
+                <th>{% trans %}Code{% endtrans %}</th>
+                <th>{% trans %}Summary{% endtrans %}</th>
+                <th>{% trans %}Assignee{% endtrans %}</th>
+                <th>{% trans %}Reporter{% endtrans %}</th>
+                <th>{% trans %}Priority{% endtrans %}</th>
+                <th>{% trans %}Status{% endtrans %}</th>
+                <th>{% trans %}Resolution{% endtrans %}</th>
+                <th>{% trans %}Created{% endtrans %}</th>
+                <th>{% trans %}Updated{% endtrans %}</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for issue in issues %}
+                <tr>
+                    <td>{{ issue.type|trans }}</td>
+                    <td><a href="{{ path('_issue_view', {'issueId': issue.id}) }}">{{ issue.code }}</a></td>
+                    <td>
+                        {% if issue.parent %}
+                            <a href="{{ path('_issue_view', {'issueId': issue.parent.id}) }}">{{ issue.parent.code }}</a> /
+                        {% endif %}
+                        <a href="{{ path('_issue_view', {'issueId': issue.id}) }}">{{ issue.summary }}</a>
+                    </td>
+                    <td><a href="{{ path('_user_view', {'userId': issue.assignee.id}) }}">{{ issue.assignee.fullname }}</a></td>
+                    <td><a href="{{ path('_user_view', {'userId': issue.reporter.id}) }}">{{ issue.reporter.fullname }}</a></td>
+                    <td>{{ issue.priority|trans }}</td>
+                    <td>{{ issue.status|trans }}</td>
+                    <td>{{ issue.resolution|trans }}</td>
+                    <td>{{ issue.created|date('m/d/Y H:i', app.user.timezone) }}</td>
+                    <td>
+                        {% if issue.updated %}
+                            {{ issue.updated|date('m/d/Y H:i', app.user.timezone) }}
+                        {% else %}
+                            &nbsp;
+                        {% endif %}
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p>{% trans %}There are no issues {% endtrans %}</p>
+    {% endif %}
+
+{% endblock %}

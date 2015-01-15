@@ -1,0 +1,57 @@
+{% extends 'base.html.twig' %}
+
+{% block title %} {% trans %}Create New Issue{% endtrans %} {% endblock %}
+
+{% block body %}
+    {% if form is defined and form %}
+        {% block header %}
+            <h1>{% trans %}Create New Issue{% endtrans %}</h1>
+        {% endblock %}
+        <p>
+            <a href="javascript:history.back()">{% trans %}Back{% endtrans %}</a>
+        </p>
+        {{ form_start(form) }}
+        {{ form_widget(form) }}
+        {{ form_end(form) }}
+    {% endif %}
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+        var $issue = $('#issue_create_type');
+        var $project = $('#issue_create_project');
+        $('#issue_create_type, #issue_create_project').change(function() {
+            var $form = $(this).closest('form');
+
+            var data = {};
+            data[$issue.attr('name')] = $issue.val();
+            data[$project.attr('name')] = $project.val();
+
+            $.ajax({
+                url : $form.attr('action'),
+                type: $form.attr('method'),
+                data : data,
+                success: function(html) {
+                    var updateElement = function(elementId) {
+                        var $element = $(html).find(elementId);
+                        var $elementToReplace = $(elementId);
+                        if ($(elementId).parent().attr('class') == 'form-group') {
+                            $elementToReplace = $(elementId).parent();
+                        }
+
+                        if ($element.attr('type') != 'hidden') {
+                            $elementToReplace.replaceWith($element.closest('div'));
+                        } else {
+                            $elementToReplace.replaceWith($element);
+                        }
+                    };
+
+                    updateElement('#issue_create_parent');
+                    updateElement('#issue_create_assignee');
+                    updateElement('#issue_create_token');
+                }
+            });
+        });
+    </script>
+{% endblock %}

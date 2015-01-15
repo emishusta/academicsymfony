@@ -1,0 +1,5 @@
+services:
+    oro_issuebundle.configure_menu_listener:
+        class: Oro\IssueBundle\EventListener\ConfigureMenuListener
+        tags:
+          - { name: kernel.event_listener, event: app.menu_configure, method: onMenuConfigure }

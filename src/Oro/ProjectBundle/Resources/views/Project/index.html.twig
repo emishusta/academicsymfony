@@ -4,7 +4,7 @@
 
 {% block body %}
     {% if is_granted('ROLE_SUPER_ADMIN') or is_granted('ROLE_ADMIN') %}
-        <p><a href="{{ path('_project_new') }}">{% trans %}Add New Project{% endtrans %}</a></p>
+        <p><a href="{{ path('_project_create') }}">{% trans %}Add New Project{% endtrans %}</a></p>
     {% endif %}
 
     {% if projects %}
