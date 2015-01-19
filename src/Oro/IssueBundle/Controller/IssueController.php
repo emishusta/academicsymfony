@@ -105,9 +105,15 @@ class IssueController extends Controller
         $commentForm = $this->get('form.factory')
             ->create(new CommentType($commentFormAction, $issueRepository), $comment);
 
+        $collaborators = $dbManager->getRepository('OroUserBundle:User')
+            ->getIssueCollaborators($issueId)
+            ->getQuery()
+            ->getResult();
+
         return array(
             'issue' => $issue,
-            'comment_form' => $commentForm->createView()
+            'comment_form' => $commentForm->createView(),
+            'collaborators' => $collaborators,
         );
     }
 
