@@ -1,0 +1,17 @@
+<div id="issue_comments_list" xmlns="http://www.w3.org/1999/html">
+        {% for comment in issue.comments %}
+            <div id="comment-container-{{ comment.id }}" class="well">
+                {% if app.user.id == comment.author.id or is_granted('ROLE_SUPER_ADMIN') %}
+                    <p id="{{ comment.id }}" class="navbar-right comment-toolbar">
+                        <button class="glyphicon glyphicon-pencil navbar-link btn btn-primary comment-edit"></button>
+                        <button class="glyphicon glyphicon-trash navbar-link btn btn-primary comment-remove"></button>
+                    </p>
+                {% endif %}
+                <p>
+                    <a href="{{ path('_user_view', {'userId': comment.author.id}) }}">{{ comment.author.fullname }}</a>
+                    {% trans %}added comment{% endtrans %} - {{ comment.created|date('m/d/Y H:i', app.user.timezone) }}
+                </p>
+                <p id="comment-body-{{ comment.id }}">{{ comment.body }}</p>
+            </div>
+        {% endfor %}
+</div>

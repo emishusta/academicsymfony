@@ -70,7 +70,15 @@
                 <div class="panel panel-default">
                     <div class="panel-heading">{% trans %}Comments{% endtrans %}</div>
                     <div class="panel-body">
-                        TODO: List of comments
+                        {{ include('OroIssueBundle:Comment:list.html.twig', { 'issue': issue }) }}
+                        <div class="panel panel-info">
+                            <div class="panel-heading"><strong>{% trans %}Add New Comment{% endtrans %}</strong></div>
+                            <div class="panel-body">
+                                {{ form_start(comment_form) }}
+                                {{ form_widget(comment_form) }}
+                                {{ form_end(comment_form) }}
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -81,4 +89,59 @@
         </div>
     {% endif %}
 
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+        var $form = $('form[name=issue_comment_create]');
+        $form.submit(function(event) {
+            $.ajax({
+                url : $form.attr('action'),
+                type: $form.attr('method'),
+                data : $form.serialize(),
+                success: function(html) {
+                    $('#issue_comments_list').replaceWith(html);
+                    $form.find('textarea').val('');
+                }
+            });
+            event.preventDefault();
+        });
+
+        var editUrl = "{{ path('_issue_comment_update', { 'commentId': "0" }) }}";
+        $('#issue_comments_list').parent().on('click', '.comment-edit', function(event) {
+            var commentId = $(event.target).parent().attr('id');
+
+            var $editForm = $form.clone();
+            var commentBody = $('#comment-body-' + commentId).html();
+            $editForm.find('textarea').val(commentBody);
+            $('#comment-container-' + commentId).html($editForm);
+
+            $editForm.submit(function(event) {
+                $.ajax({
+                    url : editUrl.replace("0", commentId),
+                    type: $editForm.attr('method'),
+                    data : $editForm.serialize(),
+                    success: function(html) {
+                        $('#issue_comments_list').replaceWith(html);
+                    }
+                });
+
+                event.preventDefault();
+            });
+        });
+
+        var deleteUrl = "{{ path('_issue_comment_delete', { 'commentId': "0" }) }}";
+        $('#issue_comments_list').parent().on('click', '.comment-remove', function(event) {
+            var commentId = $(event.target).parent().attr('id');
+
+            $.ajax({
+                url : deleteUrl.replace("0", commentId),
+                type: 'POST',
+                success: function(html) {
+                    $('#issue_comments_list').replaceWith(html);
+                }
+            });
+        });
+    </script>
 {% endblock %}

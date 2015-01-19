@@ -2,7 +2,9 @@
 
 namespace Oro\IssueBundle\Controller;
 
+use Oro\IssueBundle\Entity\Comment;
 use Oro\IssueBundle\Entity\Issue;
+use Oro\IssueBundle\Form\CommentType;
 use Oro\IssueBundle\Form\IssueEditType;
 use Oro\IssueBundle\Form\IssueType;
 use Oro\ProjectBundle\Entity\Project;
@@ -96,7 +98,17 @@ class IssueController extends Controller
             return array();
         }
 
-        return array('issue' => $issue);
+        $comment = new Comment();
+        $comment->setIssue($issue);
+        $commentFormAction = $this->generateUrl('_issue_comment_create');
+        $issueRepository = $dbManager->getRepository('Oro\IssueBundle\Entity\Issue');
+        $commentForm = $this->get('form.factory')
+            ->create(new CommentType($commentFormAction, $issueRepository), $comment);
+
+        return array(
+            'issue' => $issue,
+            'comment_form' => $commentForm->createView()
+        );
     }
 
     /**

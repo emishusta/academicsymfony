@@ -91,6 +91,11 @@ class Issue
      */
     protected $project;
 
+    /**
+     * @ORM\OneToMany(targetEntity="Oro\IssueBundle\Entity\Comment", mappedBy="issue")
+     **/
+    protected $comments;
+
     public function __construct()
     {
         $this->children = new ArrayCollection();
@@ -470,5 +475,46 @@ class Issue
         $this->setUpdated(new \DateTime());
 
         return $this;
+    }
+
+    /**
+     * Add comments
+     *
+     * @param \Oro\IssueBundle\Entity\Comment $comments
+     * @return Issue
+     */
+    public function addComment(\Oro\IssueBundle\Entity\Comment $comments)
+    {
+        $this->comments[] = $comments;
+
+        return $this;
+    }
+
+    /**
+     * Remove comments
+     *
+     * @param \Oro\IssueBundle\Entity\Comment $comments
+     */
+    public function removeComment(\Oro\IssueBundle\Entity\Comment $comments)
+    {
+        $this->comments->removeElement($comments);
+    }
+
+    /**
+     * Get comments
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getComments()
+    {
+        return $this->comments;
+    }
+
+    /**
+     * @return string
+     */
+    public function __toString()
+    {
+        return (string)$this->getId();
     }
 }

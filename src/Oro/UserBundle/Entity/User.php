@@ -98,6 +98,11 @@ class User implements UserInterface, \Serializable
     protected $assignedIssues;
 
     /**
+     * @ORM\OneToMany(targetEntity="Oro\IssueBundle\Entity\Comment", mappedBy="author")
+     */
+    protected $comments;
+
+    /**
      * Set default values
      */
     public function __construct()
@@ -587,5 +592,38 @@ class User implements UserInterface, \Serializable
     public function getAssignedIssues()
     {
         return $this->assignedIssues;
+    }
+
+    /**
+     * Add comments
+     *
+     * @param \Oro\IssueBundle\Entity\Comment $comments
+     * @return User
+     */
+    public function addComment(\Oro\IssueBundle\Entity\Comment $comments)
+    {
+        $this->comments[] = $comments;
+
+        return $this;
+    }
+
+    /**
+     * Remove comments
+     *
+     * @param \Oro\IssueBundle\Entity\Comment $comments
+     */
+    public function removeComment(\Oro\IssueBundle\Entity\Comment $comments)
+    {
+        $this->comments->removeElement($comments);
+    }
+
+    /**
+     * Get comments
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getComments()
+    {
+        return $this->comments;
     }
 }

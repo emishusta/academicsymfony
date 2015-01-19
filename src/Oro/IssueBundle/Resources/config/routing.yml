@@ -1,4 +1,9 @@
-_user:
+_oro_issuebundle:
     resource: "@OroIssueBundle/Controller/IssueController.php"
     type:     annotation
     prefix:   /issue
+
+_oro_issuebundle_comment:
+    resource: "@OroIssueBundle/Controller/CommentController.php"
+    type:     annotation
+    prefix:   /issue/comment

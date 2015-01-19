@@ -15,7 +15,7 @@ use Symfony\Component\HttpFoundation\Request;
 class UserController extends Controller
 {
     /**
-     * @Route("/", name="_user")
+     * @Route("/user", name="_user")
      * @Template()
      */
     public function indexAction()
@@ -41,7 +41,7 @@ class UserController extends Controller
     }
 
     /**
-     * @Route("/create", name="_user_create")
+     * @Route("/user/create", name="_user_create")
      * @Template()
      */
     public function createAction()
@@ -76,7 +76,7 @@ class UserController extends Controller
     }
 
     /**
-     * @Route("/update/{userId}", name="_user_update", requirements={"userId": "\d+"})
+     * @Route("/user/update/{userId}", name="_user_update", requirements={"userId": "\d+"})
      * @Template()
      */
     public function updateAction($userId)
