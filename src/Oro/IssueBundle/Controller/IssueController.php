@@ -61,6 +61,10 @@ class IssueController extends Controller
             $form->submit($request);
             if ($form->isValid()) {
                 $issue->setReporter($currentUser);
+                $issue->addCollaborator($currentUser);
+                if (!$issue->getCollaborators()->contains($issue->getAssignee())) {
+                    $issue->addCollaborator($issue->getAssignee());
+                }
                 $dbManager->persist($issue);
                 $dbManager->flush();
 
@@ -105,15 +109,9 @@ class IssueController extends Controller
         $commentForm = $this->get('form.factory')
             ->create(new CommentType($commentFormAction, $issueRepository), $comment);
 
-        $collaborators = $dbManager->getRepository('OroUserBundle:User')
-            ->getIssueCollaborators($issueId)
-            ->getQuery()
-            ->getResult();
-
         return array(
             'issue' => $issue,
             'comment_form' => $commentForm->createView(),
-            'collaborators' => $collaborators,
         );
     }
 
@@ -147,6 +145,9 @@ class IssueController extends Controller
 
         $request = $this->get('request');
         if ($request->isMethod('POST') && $form->submit($request)->isValid()) {
+            if (!$issue->getCollaborators()->contains($issue->getAssignee())) {
+                $issue->addCollaborator($issue->getAssignee());
+            }
             $dbManager->flush();
 
             $flash = $this->get('braincrafted_bootstrap.flash');

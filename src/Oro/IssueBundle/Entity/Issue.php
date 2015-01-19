@@ -95,10 +95,17 @@ class Issue
      * @ORM\OneToMany(targetEntity="Oro\IssueBundle\Entity\Comment", mappedBy="issue")
      **/
     protected $comments;
+    
+    /**
+     * @ORM\ManyToMany(targetEntity="Oro\UserBundle\Entity\User", inversedBy="issuesCollaborator")
+     * @ORM\JoinTable(name="oro_issue_collaborator_to_user")
+     **/
+    protected $collaborators;
 
     public function __construct()
     {
         $this->children = new ArrayCollection();
+        $this->collaborators = new ArrayCollection();
         $this->status = 'OPEN';
         $this->resolution = 'UNRESOLVED';
     }
@@ -470,7 +477,7 @@ class Issue
      *
      * @return $this
      */
-    public function updateUpdatedDate()
+    public function updateUpdatedDate($event)
     {
         $this->setUpdated(new \DateTime());
 
@@ -516,5 +523,38 @@ class Issue
     public function __toString()
     {
         return (string)$this->getId();
+    }
+
+    /**
+     * Add collaborators
+     *
+     * @param \Oro\UserBundle\Entity\User $collaborators
+     * @return Issue
+     */
+    public function addCollaborator(\Oro\UserBundle\Entity\User $collaborators)
+    {
+        $this->collaborators[] = $collaborators;
+
+        return $this;
+    }
+
+    /**
+     * Remove collaborators
+     *
+     * @param \Oro\UserBundle\Entity\User $collaborators
+     */
+    public function removeCollaborator(\Oro\UserBundle\Entity\User $collaborators)
+    {
+        $this->collaborators->removeElement($collaborators);
+    }
+
+    /**
+     * Get collaborators
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getCollaborators()
+    {
+        return $this->collaborators;
     }
 }

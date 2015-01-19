@@ -31,6 +31,9 @@ class CommentController extends Controller
                 $securityContext = $this->container->get('security.context');
                 $currentUser = $securityContext->getToken()->getUser();
                 $comment->setAuthor($currentUser);
+                if (!$comment->getIssue()->getCollaborators()->contains($currentUser)) {
+                    $comment->getIssue()->addCollaborator($currentUser);
+                }
 
                 $dbManager->persist($comment);
                 $dbManager->flush();

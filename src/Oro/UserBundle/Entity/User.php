@@ -103,6 +103,11 @@ class User implements UserInterface, \Serializable
     protected $comments;
 
     /**
+     * @ORM\ManyToMany(targetEntity="Oro\IssueBundle\Entity\Issue", mappedBy="collaborators")
+     */
+    protected $issuesCollaborator;
+
+    /**
      * Set default values
      */
     public function __construct()
@@ -113,6 +118,7 @@ class User implements UserInterface, \Serializable
         $this->created = new \DateTime();
         $this->reporterIssues = new ArrayCollection();
         $this->assignedIssues = new ArrayCollection();
+        $this->issuesCollaborator = new ArrayCollection();
     }
 
     /**
@@ -625,5 +631,61 @@ class User implements UserInterface, \Serializable
     public function getComments()
     {
         return $this->comments;
+    }
+
+    /**
+     * Set issueCollaborator
+     *
+     * @param \Oro\IssueBundle\Entity\Issue $issueCollaborator
+     * @return User
+     */
+    public function setIssueCollaborator(\Oro\IssueBundle\Entity\Issue $issueCollaborator = null)
+    {
+        $this->issueCollaborator = $issueCollaborator;
+
+        return $this;
+    }
+
+    /**
+     * Get issueCollaborator
+     *
+     * @return \Oro\IssueBundle\Entity\Issue 
+     */
+    public function getIssueCollaborator()
+    {
+        return $this->issueCollaborator;
+    }
+
+    /**
+     * Add issuesCollaborator
+     *
+     * @param \Oro\IssueBundle\Entity\Issue $issuesCollaborator
+     * @return User
+     */
+    public function addIssuesCollaborator(\Oro\IssueBundle\Entity\Issue $issuesCollaborator)
+    {
+        $this->issuesCollaborator[] = $issuesCollaborator;
+
+        return $this;
+    }
+
+    /**
+     * Remove issuesCollaborator
+     *
+     * @param \Oro\IssueBundle\Entity\Issue $issuesCollaborator
+     */
+    public function removeIssuesCollaborator(\Oro\IssueBundle\Entity\Issue $issuesCollaborator)
+    {
+        $this->issuesCollaborator->removeElement($issuesCollaborator);
+    }
+
+    /**
+     * Get issuesCollaborator
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getIssuesCollaborator()
+    {
+        return $this->issuesCollaborator;
     }
 }

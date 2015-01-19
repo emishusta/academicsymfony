@@ -87,7 +87,7 @@
                     <div class="panel-heading">{% trans %}Collaborators{% endtrans %}</div>
                     <div class="panel-body">
                         <ul>
-                            {% for collaborator in collaborators %}
+                            {% for collaborator in issue.collaborators %}
                                 <li>
                                     <a href="{{ path('_user_view', {'userId': collaborator.id}) }}">{{ collaborator.fullname }}</a>
                                 </li>
