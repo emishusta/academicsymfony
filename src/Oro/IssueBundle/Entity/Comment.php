@@ -149,4 +149,44 @@ class Comment
 
         return $this;
     }
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->activities = new \Doctrine\Common\Collections\ArrayCollection();
+    }
+
+    /**
+     * Add activities
+     *
+     * @param \Oro\IssueBundle\Entity\Activity $activities
+     * @return Comment
+     */
+    public function addActivity(\Oro\IssueBundle\Entity\Activity $activities)
+    {
+        $this->activities[] = $activities;
+
+        return $this;
+    }
+
+    /**
+     * Remove activities
+     *
+     * @param \Oro\IssueBundle\Entity\Activity $activities
+     */
+    public function removeActivity(\Oro\IssueBundle\Entity\Activity $activities)
+    {
+        $this->activities->removeElement($activities);
+    }
+
+    /**
+     * Get activities
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getActivities()
+    {
+        return $this->activities;
+    }
 }

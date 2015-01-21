@@ -2,6 +2,7 @@
 
 namespace Oro\IssueBundle\Controller;
 
+use Oro\IssueBundle\Entity\Activity;
 use Oro\IssueBundle\Entity\Comment;
 use Oro\IssueBundle\Entity\Issue;
 use Oro\IssueBundle\Form\CommentType;
@@ -65,7 +66,16 @@ class IssueController extends Controller
                 if (!$issue->getCollaborators()->contains($issue->getAssignee())) {
                     $issue->addCollaborator($issue->getAssignee());
                 }
+
                 $dbManager->persist($issue);
+
+                $activity = new Activity();
+                $activity->setType(Activity::TYPE_NEW_ISSUE)
+                    ->setIssueNewStatus($issue->getStatus())
+                    ->setUser($currentUser);
+                $activity->setIssue($issue);
+                $dbManager->persist($activity);
+
                 $dbManager->flush();
 
                 $flash = $this->get('braincrafted_bootstrap.flash');
@@ -148,6 +158,19 @@ class IssueController extends Controller
             if (!$issue->getCollaborators()->contains($issue->getAssignee())) {
                 $issue->addCollaborator($issue->getAssignee());
             }
+
+            $unitOfWork = $dbManager->getUnitOfWork();
+            $unitOfWork->computeChangeSets();
+            $changeSet = $unitOfWork->getEntityChangeSet($issue);
+            if (isset($changeSet['status'])) {
+                $activity = new Activity();
+                $activity->setType(Activity::TYPE_CHANGED_ISSUE)
+                    ->setIssueNewStatus($issue->getStatus())
+                    ->setUser($currentUser);
+                $activity->setIssue($issue);
+                $dbManager->persist($activity);
+            }
+
             $dbManager->flush();
 
             $flash = $this->get('braincrafted_bootstrap.flash');

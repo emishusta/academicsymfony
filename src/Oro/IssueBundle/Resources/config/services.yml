@@ -2,4 +2,10 @@ services:
     oro_issuebundle.configure_menu_listener:
         class: Oro\IssueBundle\EventListener\ConfigureMenuListener
         tags:
-          - { name: kernel.event_listener, event: app.menu_configure, method: onMenuConfigure }
+            - { name: kernel.event_listener, event: app.menu_configure, method: onMenuConfigure }
+
+    oro_issuebundle.activity_new_listener:
+        class: Oro\IssueBundle\EventListener\ActivityNewListener
+        arguments: [@service_container, "%mailer_from%"]
+        tags:
+            - { name: doctrine.event_listener, event: postPersist }

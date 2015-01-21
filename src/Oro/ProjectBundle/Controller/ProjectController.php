@@ -93,10 +93,15 @@ class ProjectController extends Controller
         $issues = $dbManager->getRepository('OroIssueBundle:Issue')
             ->getIssuesByProject($projectId)->getQuery()->getResult();
 
+        $activities = $dbManager->getRepository('OroIssueBundle:Activity')
+            ->getActivitiesByProjectId($projectId)
+            ->getQuery()
+            ->getResult();
 
         return array(
             'project' => $project,
             'issues' => $issues,
+            'activities' => $activities,
         );
     }
 

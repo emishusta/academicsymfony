@@ -95,7 +95,7 @@
                         </ul>
                     </div>
                 </div>
-                TODO: Activities list
+                {{ include('OroIssueBundle:Activity:list.html.twig', { 'activities': issue.activities }) }}
             </div>
         </div>
     {% endif %}

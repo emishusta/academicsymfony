@@ -2,6 +2,7 @@
 
 namespace Oro\IssueBundle\Controller;
 
+use Oro\IssueBundle\Entity\Activity;
 use Oro\IssueBundle\Entity\Comment;
 use Oro\IssueBundle\Form\CommentType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -36,6 +37,14 @@ class CommentController extends Controller
                 }
 
                 $dbManager->persist($comment);
+
+                $activity = new Activity();
+                $activity->setType(Activity::TYPE_NEW_COMMENT)
+                    ->setComment($comment->getBody())
+                    ->setUser($currentUser);
+                $activity->setIssue($comment->getIssue());
+                $dbManager->persist($activity);
+
                 $dbManager->flush();
             }
         }

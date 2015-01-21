@@ -1,0 +1,30 @@
+<div class="panel panel-default">
+    <div class="panel-heading">{% trans %}Activities{% endtrans %}</div>
+    <div class="panel-body">
+        {% for activity in activities %}
+        <div class="well">
+            <h6>
+                <strong>{{ activity.created|date('m/d/Y H:i', app.user.timezone) }}</strong>
+            </h6>
+            {% set issueLink %}
+                <a href="{{ url('_issue_view', {'issueId': activity.issue.id}) }}">{{ activity.issue.code }} - {{ activity.issue.summary }}</a>
+            {% endset %}
+
+            <a href="{{ url('_user_view', {'userId': activity.user.id}) }}">{{ activity.user.fullname }}</a>
+            {% if activity.type == constant('Oro\\IssueBundle\\Entity\\Activity::TYPE_NEW_ISSUE') %}
+                <p>
+                    {% trans %} created new issue with status {% endtrans %} "{{ activity.issueNewStatus|trans }}":
+                </p>
+                <blockquote>{{ issueLink }}</blockquote>
+            {% elseif activity.type == constant('Oro\\IssueBundle\\Entity\\Activity::TYPE_CHANGED_ISSUE') %}
+                {% trans %} updated status to {% endtrans %} "{{ activity.issueNewStatus|trans }}" for {{ issueLink }}
+            {% elseif activity.type == constant('Oro\\IssueBundle\\Entity\\Activity::TYPE_NEW_COMMENT') %}
+                {% trans %} commented on {% endtrans %} {{ issueLink }}:
+                <blockquote>{{ activity.comment }}</blockquote>
+            {% else %}
+                {% trans %} No Activities {% endtrans %}
+            {% endif %}
+        </div>
+        {% endfor %}
+    </div>
+</div>

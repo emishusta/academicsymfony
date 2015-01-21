@@ -42,15 +42,9 @@
                         </div>
                     </div>
                 {% endif %}
-                <div class="panel panel-default">
-                    <div class="panel-heading">{% trans %}Comments{% endtrans %}</div>
-                    <div class="panel-body">
-                        TODO: List of comments
-                    </div>
-                </div>
             </div>
             <div class="col-md-4">
-                TODO: Activities list
+                {{ include('OroIssueBundle:Activity:list.html.twig', { 'activities': user.activities }) }}
             </div>
         </div>
     {% endif %}

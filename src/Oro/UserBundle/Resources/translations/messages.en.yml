@@ -1,0 +1,3 @@
+ROLE_SUPER_ADMIN: Administrator
+ROLE_ADMIN: Manager
+ROLE_USER: Operator

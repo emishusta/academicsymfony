@@ -108,6 +108,12 @@ class User implements UserInterface, \Serializable
     protected $issuesCollaborator;
 
     /**
+     * @ORM\OneToMany(targetEntity="Oro\IssueBundle\Entity\Activity", mappedBy="user")
+     * @ORM\OrderBy({"created" = "DESC"})
+     */
+    protected $activities;
+
+    /**
      * Set default values
      */
     public function __construct()
@@ -119,6 +125,7 @@ class User implements UserInterface, \Serializable
         $this->reporterIssues = new ArrayCollection();
         $this->assignedIssues = new ArrayCollection();
         $this->issuesCollaborator = new ArrayCollection();
+        $this->activities = new ArrayCollection();
     }
 
     /**
@@ -687,5 +694,38 @@ class User implements UserInterface, \Serializable
     public function getIssuesCollaborator()
     {
         return $this->issuesCollaborator;
+    }
+
+    /**
+     * Add activities
+     *
+     * @param \Oro\IssueBundle\Entity\Activity $activities
+     * @return User
+     */
+    public function addActivity(\Oro\IssueBundle\Entity\Activity $activities)
+    {
+        $this->activities[] = $activities;
+
+        return $this;
+    }
+
+    /**
+     * Remove activities
+     *
+     * @param \Oro\IssueBundle\Entity\Activity $activities
+     */
+    public function removeActivity(\Oro\IssueBundle\Entity\Activity $activities)
+    {
+        $this->activities->removeElement($activities);
+    }
+
+    /**
+     * Get activities
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getActivities()
+    {
+        return $this->activities;
     }
 }

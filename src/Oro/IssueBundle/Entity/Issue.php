@@ -4,7 +4,6 @@ namespace Oro\IssueBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
  * @ORM\Entity(repositoryClass="Oro\IssueBundle\Entity\IssueRepository")
@@ -95,6 +94,12 @@ class Issue
      * @ORM\OneToMany(targetEntity="Oro\IssueBundle\Entity\Comment", mappedBy="issue")
      **/
     protected $comments;
+
+    /**
+     * @ORM\OneToMany(targetEntity="Oro\IssueBundle\Entity\Activity", mappedBy="issue")
+     * @ORM\OrderBy({"created" = "DESC"})
+     **/
+    protected $activities;
     
     /**
      * @ORM\ManyToMany(targetEntity="Oro\UserBundle\Entity\User", inversedBy="issuesCollaborator")
@@ -106,6 +111,7 @@ class Issue
     {
         $this->children = new ArrayCollection();
         $this->collaborators = new ArrayCollection();
+        $this->activities = new ArrayCollection();
         $this->status = 'OPEN';
         $this->resolution = 'UNRESOLVED';
     }
@@ -556,5 +562,38 @@ class Issue
     public function getCollaborators()
     {
         return $this->collaborators;
+    }
+
+    /**
+     * Add activities
+     *
+     * @param \Oro\IssueBundle\Entity\Activity $activities
+     * @return Issue
+     */
+    public function addActivity(\Oro\IssueBundle\Entity\Activity $activities)
+    {
+        $this->activities[] = $activities;
+
+        return $this;
+    }
+
+    /**
+     * Remove activities
+     *
+     * @param \Oro\IssueBundle\Entity\Activity $activities
+     */
+    public function removeActivity(\Oro\IssueBundle\Entity\Activity $activities)
+    {
+        $this->activities->removeElement($activities);
+    }
+
+    /**
+     * Get activities
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getActivities()
+    {
+        return $this->activities;
     }
 }
