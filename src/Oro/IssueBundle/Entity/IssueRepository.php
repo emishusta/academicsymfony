@@ -77,4 +77,20 @@ class IssueRepository extends EntityRepository
 
         return $queryBuilder;
     }
+
+    /**
+     * @param $userId
+     * @return \Doctrine\ORM\QueryBuilder
+     */
+    public function getIssuesByUserCollaboration($userId)
+    {
+        $queryBuilder = $this->createQueryBuilder('i')
+            ->join('i.collaborators', 'c')
+            ->where('c.id = :userId')
+            ->andWhere('i.status = :open')
+            ->setParameter('userId', $userId)
+            ->setParameter('open', 'OPEN');
+
+        return $queryBuilder;
+    }
 }

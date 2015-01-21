@@ -23,4 +23,23 @@ class ActivityRepository extends EntityRepository
 
         return $queryBuilder;
     }
+
+    /**
+     * Gets activities in projects where user is a member
+     *
+     * @param $userId
+     * @return \Doctrine\ORM\QueryBuilder
+     */
+    public function getActivitiesByUserMembership($userId)
+    {
+        $queryBuilder = $this->createQueryBuilder('a')
+            ->join('a.issue', 'i')
+            ->join('i.project', 'p')
+            ->join('p.members', 'u')
+            ->where('u.id = :userId')
+            ->orderBy('a.created', 'DESC')
+            ->setParameter('userId', $userId);
+
+        return $queryBuilder;
+    }
 }

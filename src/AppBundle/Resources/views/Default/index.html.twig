@@ -1,0 +1,23 @@
+{% extends 'base.html.twig' %}
+
+{% block title %} {% trans %}Issues List{% endtrans %} {% endblock %}
+
+{% block body %}
+    <div class="row">
+        <div class="col-md-8">
+            {{ include('OroIssueBundle:Activity:list.html.twig', { 'activities': activities }) }}
+        </div>
+        <div class="col-md-4">
+            <div class="panel panel-default">
+                <div class="panel-heading">{% trans %}Issues where user is collaborator{% endtrans %}</div>
+                <div class="panel-body">
+                    <ul>
+                        {% for issue in issues %}
+                            <li><a href="{{ path('_issue_view', {'issueId': issue.id}) }}">{{ issue.code }} - {{ issue.summary }}</a></li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
