@@ -25,11 +25,13 @@ class Activity
 
     /**
      * @ORM\ManyToOne(targetEntity="Oro\IssueBundle\Entity\Issue", inversedBy="activities")
+     * @ORM\JoinColumn(name="issue_id", referencedColumnName="id", onDelete="CASCADE")
      */
     protected $issue;
 
     /**
      * @ORM\ManyToOne(targetEntity="Oro\UserBundle\Entity\User", inversedBy="activities")
+     * @ORM\JoinColumn(name="user_id", referencedColumnName="id", onDelete="CASCADE")
      */
     protected $user;
 

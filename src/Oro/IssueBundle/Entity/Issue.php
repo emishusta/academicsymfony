@@ -56,17 +56,19 @@ class Issue
 
     /**
      * @ORM\ManyToOne(targetEntity="Oro\UserBundle\Entity\User", inversedBy="reporterIssues")
+     * @ORM\JoinColumn(name="reporter_id", referencedColumnName="id", onDelete="SET NULL")
      */
     protected $reporter;
 
     /**
      * @ORM\ManyToOne(targetEntity="Oro\UserBundle\Entity\User", inversedBy="assignedIssues")
+     * @ORM\JoinColumn(name="assignee_id", referencedColumnName="id", onDelete="SET NULL")
      */
     protected $assignee;
 
     /**
      * @ORM\ManyToOne(targetEntity="Oro\IssueBundle\Entity\Issue", inversedBy="children")
-     * @ORM\JoinColumn(name="parent_id", referencedColumnName="id")
+     * @ORM\JoinColumn(name="parent_id", referencedColumnName="id", onDelete="CASCADE")
      **/
     protected $parent;
 
@@ -87,6 +89,7 @@ class Issue
 
     /**
      * @ORM\ManyToOne(targetEntity="Oro\ProjectBundle\Entity\Project", inversedBy="issues")
+     * @ORM\JoinColumn(name="project_id", referencedColumnName="id", onDelete="CASCADE")
      */
     protected $project;
 
