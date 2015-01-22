@@ -2,6 +2,7 @@
 
 namespace Oro\IssueBundle\Form;
 
+use Oro\IssueBundle\Entity\Issue;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Security\Core\SecurityContextInterface;
 
@@ -20,17 +21,17 @@ class IssueEditType extends IssueType
             ->remove('save')
             ->add('status', 'choice', array(
                 'choices'   => array(
-                    'OPEN' => 'OPEN',
-                    'IN_PROGRESS' => 'IN_PROGRESS',
-                    'CLOSED' => 'CLOSED',
+                    Issue::ISSUE_STATUS_OPEN => Issue::ISSUE_STATUS_OPEN,
+                    Issue::ISSUE_STATUS_IN_PROGRESS => Issue::ISSUE_STATUS_IN_PROGRESS,
+                    Issue::ISSUE_STATUS_CLOSED => Issue::ISSUE_STATUS_CLOSED,
                 ),
                 'required'  => true,
             ))
             ->add('resolution', 'choice', array(
                 'choices'   => array(
-                    'UNRESOLVED' => 'UNRESOLVED',
-                    'FIXED' => 'FIXED',
-                    'INCOMPLETE' => 'INCOMPLETE',
+                    Issue::ISSUE_RESOLUTION_UNRESOLVED => Issue::ISSUE_RESOLUTION_UNRESOLVED,
+                    Issue::ISSUE_RESOLUTION_FIXED => Issue::ISSUE_RESOLUTION_FIXED,
+                    Issue::ISSUE_RESOLUTION_INCOMPLETE => Issue::ISSUE_RESOLUTION_INCOMPLETE,
                 ),
                 'required'  => true,
             ))

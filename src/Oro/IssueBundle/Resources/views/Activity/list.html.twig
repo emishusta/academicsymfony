@@ -4,7 +4,7 @@
         {% for activity in activities %}
         <div class="well">
             <h6>
-                <strong>{{ activity.created|date('m/d/Y H:i', app.user.timezone) }}</strong>
+                <strong>{{ activity.created|date('m/d/Y H:i', user.timezone) }}</strong>
             </h6>
             {% set issueLink %}
                 <a href="{{ url('_issue_view', {'issueId': activity.issue.id}) }}">{{ activity.issue.code }} - {{ activity.issue.summary }}</a>

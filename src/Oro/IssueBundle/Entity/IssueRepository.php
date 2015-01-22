@@ -32,7 +32,7 @@ class IssueRepository extends EntityRepository
     {
         $queryBuilder = $this->createQueryBuilder('i')
             ->where('i.type = :type')
-            ->setParameter('type', 'STORY');
+            ->setParameter('type', Issue::ISSUE_TYPE_STORY);
         if ($projectId !== null) {
             $queryBuilder->join('i.project', 'p')
                 ->andWhere('p.id=:projectId')
@@ -89,7 +89,7 @@ class IssueRepository extends EntityRepository
             ->where('c.id = :userId')
             ->andWhere('i.status = :open')
             ->setParameter('userId', $userId)
-            ->setParameter('open', 'OPEN');
+            ->setParameter('open', Issue::ISSUE_STATUS_OPEN);
 
         return $queryBuilder;
     }

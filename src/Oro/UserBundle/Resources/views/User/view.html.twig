@@ -44,7 +44,7 @@
                 {% endif %}
             </div>
             <div class="col-md-4">
-                {{ include('OroIssueBundle:Activity:list.html.twig', { 'activities': user.activities }) }}
+                {{ include('OroIssueBundle:Activity:list.html.twig', { 'activities': user.activities, 'user': app.user }) }}
             </div>
         </div>
     {% endif %}

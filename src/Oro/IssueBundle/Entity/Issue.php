@@ -12,6 +12,24 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Issue
 {
+    const ISSUE_TYPE_BUG = 'BUG';
+    const ISSUE_TYPE_SUBTASK = 'SUBTASK';
+    const ISSUE_TYPE_TASK = 'TASK';
+    const ISSUE_TYPE_STORY = 'STORY';
+
+    const ISSUE_PRIORITY_BLOCKER = 'BLOCKER';
+    const ISSUE_PRIORITY_CRITICAL = 'CRITICAL';
+    const ISSUE_PRIORITY_MAJOR = 'MAJOR';
+    const ISSUE_PRIORITY_MINOR = 'MINOR';
+
+    const ISSUE_STATUS_OPEN = 'OPEN';
+    const ISSUE_STATUS_IN_PROGRESS = 'IN_PROGRESS';
+    const ISSUE_STATUS_CLOSED = 'CLOSED';
+
+    const ISSUE_RESOLUTION_UNRESOLVED = 'UNRESOLVED';
+    const ISSUE_RESOLUTION_FIXED = 'FIXED';
+    const ISSUE_RESOLUTION_INCOMPLETE = 'INCOMPLETE';
+
     /**
      * @ORM\Column(type="integer")
      * @ORM\Id
@@ -115,8 +133,8 @@ class Issue
         $this->children = new ArrayCollection();
         $this->collaborators = new ArrayCollection();
         $this->activities = new ArrayCollection();
-        $this->status = 'OPEN';
-        $this->resolution = 'UNRESOLVED';
+        $this->status = self::ISSUE_STATUS_OPEN;
+        $this->resolution = self::ISSUE_RESOLUTION_UNRESOLVED;
     }
 
     /**

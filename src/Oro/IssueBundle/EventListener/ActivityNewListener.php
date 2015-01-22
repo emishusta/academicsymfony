@@ -30,16 +30,19 @@ class ActivityNewListener
         $entity = $args->getEntity();
 
         if ($entity instanceof Activity) {
-            $body = $this->container->get('templating')
-                ->render('OroIssueBundle:Activity:list.html.twig', array('activities' => array($entity)));
+
             $message = $this->container->get('mailer')->createMessage()
                 ->setSubject($this->container->get('translator')->trans('New Activity Notification'))
-                ->setFrom($this->mailerFrom)
-                ->setBody($body, 'text/html');
-
+                ->setFrom($this->mailerFrom);
 
             foreach ($entity->getIssue()->getCollaborators() as $collaborator) {
-                $message->setTo(array($collaborator->getEmail() => $collaborator->getFullname()));
+                $body = $this->container->get('templating')
+                    ->render(
+                        'OroIssueBundle:Activity:list.html.twig',
+                        array('activities' => array($entity), 'user' => $collaborator)
+                    );
+                $message->setTo(array($collaborator->getEmail() => $collaborator->getFullname()))
+                    ->setBody($body, 'text/html');
                 $this->container->get('mailer')->send($message);
             }
         }

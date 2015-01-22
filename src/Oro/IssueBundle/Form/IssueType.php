@@ -50,21 +50,20 @@ class IssueType extends AbstractType
             ->add('description', 'textarea')
             ->add('type', 'choice', array(
                 'choices'   => array(
-                    'BUG' => 'Bug',
-                    'SUBTASK' => 'Subtask',
-                    'TASK' => 'Task',
-                    'STORY' => 'Story'
+                    Issue::ISSUE_TYPE_BUG => Issue::ISSUE_TYPE_BUG,
+                    Issue::ISSUE_TYPE_SUBTASK => Issue::ISSUE_TYPE_SUBTASK,
+                    Issue::ISSUE_TYPE_TASK => Issue::ISSUE_TYPE_TASK,
+                    Issue::ISSUE_TYPE_STORY => Issue::ISSUE_TYPE_STORY,
                 ),
                 'required'  => true,
             ))
             ->add('parent', 'hidden', array('data' => null))
             ->add('priority', 'choice', array(
                 'choices'   => array(
-                    'BLOCKER' => 'Blocker',
-                    'CRITICAL' => 'Critical',
-                    'MAJOR' => 'Major',
-                    'MINOR' => 'Minor',
-                    'TRIVIAL' => 'Trivial'
+                    Issue::ISSUE_PRIORITY_BLOCKER => Issue::ISSUE_PRIORITY_BLOCKER,
+                    Issue::ISSUE_PRIORITY_CRITICAL => Issue::ISSUE_PRIORITY_CRITICAL,
+                    Issue::ISSUE_PRIORITY_MAJOR => Issue::ISSUE_PRIORITY_MAJOR,
+                    Issue::ISSUE_PRIORITY_MINOR => Issue::ISSUE_PRIORITY_MINOR,
                 ),
                 'required'  => true,
             ))
@@ -80,7 +79,7 @@ class IssueType extends AbstractType
                 $projectId = $data->getProject() ? $data->getProject()->getId() : null;
             }
 
-            if ($type == 'SUBTASK' && !empty($projectId)) {
+            if ($type == Issue::ISSUE_TYPE_SUBTASK && !empty($projectId)) {
                 $form->add('parent', 'entity', array(
                     'class' => 'Oro\IssueBundle\Entity\Issue',
                     'query_builder' => function(EntityRepository $entityRepository) use ($projectId) {
