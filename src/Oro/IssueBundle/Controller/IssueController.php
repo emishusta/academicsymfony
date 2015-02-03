@@ -81,7 +81,7 @@ class IssueController extends Controller
                 $flash = $this->get('braincrafted_bootstrap.flash');
                 $flash->success('The Issue has been saved!');
 
-                return new RedirectResponse($this->getRequest()->headers->get('referer'));
+                return new RedirectResponse($this->generateUrl('_issue_view', array('issueId' => $issue->getId())));
             }
         }
 
