@@ -37,11 +37,11 @@ class IssueType extends AbstractType
         if ($this->securityContext->isGranted('ROLE_ADMIN')) {
             $currentUser = null; //all projects will be available
         }
+
+        $projects = $this->projectRepository->getProjectsByMember($currentUser);
         $builder->add('project', 'entity', array(
                     'class' => 'Oro\ProjectBundle\Entity\Project',
-                    'query_builder' => function(EntityRepository $entityRepository) use ($currentUser) {
-                            return $entityRepository->getProjectsByMember($currentUser);
-                        },
+                    'choices' => $projects,
                     'property' => 'fullLabel',
                     'empty_value' => 'Select Project',
                 )
@@ -75,8 +75,8 @@ class IssueType extends AbstractType
                 $type = isset($data['type']) ? $data['type'] : null;
                 $projectId = isset($data['project']) ? $data['project'] : null;
             } else {
-                $type = $data->getType();
-                $projectId = $data->getProject() ? $data->getProject()->getId() : null;
+                $type = $data ? $data->getType() : null;
+                $projectId = $data && $data->getProject() ? $data->getProject()->getId() : null;
             }
 
             if ($type == Issue::ISSUE_TYPE_SUBTASK && !empty($projectId)) {
