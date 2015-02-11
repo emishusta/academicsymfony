@@ -2,12 +2,12 @@
 
 namespace Oro\UserBundle\EventListener;
 
-use AppBundle\Event\ConfigureMenuEvent;
+use Oro\AppBundle\Event\ConfigureMenuEvent;
 
 class ConfigureMenuListener
 {
     /**
-     * @param \AppBundle\Event\ConfigureMenuEvent $event
+     * @param \Oro\AppBundle\Event\ConfigureMenuEvent $event
      */
     public function onMenuConfigure(ConfigureMenuEvent $event)
     {

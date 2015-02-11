@@ -18,7 +18,7 @@
 
 <div class="container">
     {% if app.user %}
-        {{ knp_menu_render('AppBundle:MainBuilder:build', { 'style': 'tabs' }) }}
+        {{ knp_menu_render('OroAppBundle:MainBuilder:build', { 'style': 'tabs' }) }}
     {% endif %}
 
     {% include 'BraincraftedBootstrapBundle::flash.html.twig' with { 'close': true } %}

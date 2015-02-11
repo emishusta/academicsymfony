@@ -1,9 +1,9 @@
 <?php
 
-namespace AppBundle;
+namespace Oro\TestBundle;
 
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
-class AppBundle extends Bundle
+class OroTestBundle extends Bundle
 {
 }

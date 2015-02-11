@@ -1,6 +1,6 @@
 <?php
 
-namespace AppBundle\Controller;
+namespace Oro\AppBundle\Controller;
 
 use Oro\UserBundle\Entity\User;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;

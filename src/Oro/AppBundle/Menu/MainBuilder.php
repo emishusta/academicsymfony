@@ -1,8 +1,8 @@
 <?php
 
-namespace AppBundle\Menu;
+namespace Oro\AppBundle\Menu;
 
-use AppBundle\Event\ConfigureMenuEvent;
+use Oro\AppBundle\Event\ConfigureMenuEvent;
 use Knp\Menu\FactoryInterface;
 use Symfony\Component\DependencyInjection\ContainerAware;
 

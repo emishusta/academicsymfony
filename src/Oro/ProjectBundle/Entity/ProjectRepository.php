@@ -21,6 +21,6 @@ class ProjectRepository extends EntityRepository
                 ->setParameter('memberId', $userId);
         }
 
-        return $queryBuilder;
+        return $queryBuilder->getQuery()->getResult();
     }
 }

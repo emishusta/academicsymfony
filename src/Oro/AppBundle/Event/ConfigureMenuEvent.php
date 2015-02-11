@@ -1,6 +1,6 @@
 <?php
 
-namespace AppBundle\Event;
+namespace Oro\AppBundle\Event;
 
 use Knp\Menu\FactoryInterface;
 use Knp\Menu\ItemInterface;
