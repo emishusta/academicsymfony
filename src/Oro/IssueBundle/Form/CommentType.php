@@ -27,7 +27,7 @@ class CommentType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $issueId = $options['data']->getIssue() ? $options['data']->getIssue()->getId() : null;
+        $issueId = isset($options['data']) && $options['data']->getIssue() ? $options['data']->getIssue()->getId() : null;
         $builder->setAction($this->_action)
             ->add('body', 'textarea', array('label' => false))
             ->add('issue', 'entity', array('class' => 'Oro\IssueBundle\Entity\Issue'))
